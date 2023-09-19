@@ -21,7 +21,7 @@ def ED_distance(ts1, ts2):
     
     ed_dist = 0
 
-    # INSERT YOUR CODE
+    ed_dist = np.sqrt(sum(pow(ts1-ts2, 2) for ts1, ts2 in zip(ts1, ts2)))
     
     return ed_dist
 
@@ -72,8 +72,19 @@ def DTW_distance(ts1, ts2, r=None):
         DTW distance between ts1 and ts2.
     """
 
-    dtw_dist = 0
+    m = ts1.shape[0] + 1
+    D = np.zeros((m, m))
+    D[0, 1:] = float('Inf')
+    D[1:, 0] = float('Inf')
+    D[0, 0] = 0
 
-    # INSERT YOUR CODE
+    for i in range(1, m):
 
-    return dtw_dist
+        for j in range(1, m):
+            dist = (ts1[i - 1] - ts2[j - 1]) ** 2
+            D[i, j] = dist + min(D[i - 1, j],
+                                 D[i, j - 1],
+                                 D[i - 1, j - 1])
+
+    return D[-1, -1]
+ 
